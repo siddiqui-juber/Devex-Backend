@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class SupportTicketResponse {
 
     private UUID id;
@@ -32,4 +33,5 @@ public class SupportTicketResponse {
     private String clientEmail;
 
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

@@ -7,7 +7,6 @@ import Devex_Solutions.Support.Enums.TicketStatus;
 import Devex_Solutions.Support.Repository.SupportTicketRepository;
 import Devex_Solutions.User.User;
 import Devex_Solutions.User.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +16,17 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class SupportService {
 
     private final SupportTicketRepository ticketRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
+
+    public SupportService(SupportTicketRepository ticketRepository, UserRepository userRepository,EmailService emailService) {
+        this.ticketRepository = ticketRepository;
+        this.userRepository = userRepository;
+        this.emailService =  emailService;
+    }
 
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext()
@@ -41,12 +46,17 @@ public class SupportService {
                 .clientName(ticket.getClient() != null ? ticket.getClient().getFullName() : null)
                 .clientEmail(ticket.getClient() != null ? ticket.getClient().getEmail() : null)
                 .createdAt(ticket.getCreatedAt())
+                .updatedAt(ticket.getUpdatedAt())
                 .build();
     }
 
     // CLIENT: Create support ticket
-    public SupportTicketResponse createTicket(SupportTicketRequest request) {
+    public SupportTicketResponse createTicket(
+            SupportTicketRequest request
+    ) {
+
         User client = getCurrentUser();
+
         SupportTicket ticket = SupportTicket.builder()
                 .subject(request.getSubject())
                 .message(request.getMessage())
@@ -56,7 +66,16 @@ public class SupportService {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        return toResponse(ticketRepository.save(ticket));
+
+        SupportTicket savedTicket =
+                ticketRepository.save(ticket);
+
+        // SEND EMAIL
+        emailService.sendSupportNotification(
+                savedTicket
+        );
+
+        return toResponse(savedTicket);
     }
 
     // CLIENT: Get my tickets
@@ -79,7 +98,16 @@ public class SupportService {
         ticket.setAdminReply(reply);
         ticket.setStatus(TicketStatus.CLOSED);
         ticket.setUpdatedAt(LocalDateTime.now());
-        return toResponse(ticketRepository.save(ticket));
+
+        SupportTicket updatedTicket =
+                ticketRepository.save(ticket);
+
+// SEND CLIENT EMAIL
+        emailService.sendSupportReplyToClient(
+                updatedTicket
+        );
+
+        return toResponse(updatedTicket);
     }
 
     // ADMIN: Mark as in review
@@ -90,4 +118,5 @@ public class SupportService {
         ticket.setUpdatedAt(LocalDateTime.now());
         return toResponse(ticketRepository.save(ticket));
     }
+
 }

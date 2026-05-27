@@ -8,6 +8,7 @@ import Devex_Solutions.ProjectManagement.Enums.ProjectStatus;
 import Devex_Solutions.ProjectManagement.Enums.RequestStatus;
 import Devex_Solutions.ProjectManagement.Repository.ProjectRepository;
 import Devex_Solutions.ProjectManagement.Repository.ProjectRequestRepository;
+import Devex_Solutions.Support.Service.EmailService;
 import Devex_Solutions.Uploads.Service.FileService;
 import Devex_Solutions.User.User;
 import Devex_Solutions.User.UserRepository;
@@ -30,6 +31,7 @@ public class ProjectRequestService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final FileService fileService;
+    private final EmailService emailService;
 
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext()
@@ -68,7 +70,15 @@ public class ProjectRequestService {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        return toResponse(requestRepository.save(entity));
+        ProjectRequestEntity savedRequest =
+                requestRepository.save(entity);
+
+// SEND EMAIL NOTIFICATION
+        emailService.sendRequestNotification(
+                savedRequest
+        );
+
+        return toResponse(savedRequest);
     }
 
     public List<ProjectRequestResponse> getMyRequests() {
@@ -117,6 +127,10 @@ public class ProjectRequestService {
                 .build();
         projectRepository.save(project);
 
+        emailService.sendProjectApprovedEmail(
+                entity
+        );
+
         return toResponse(entity);
     }
 
@@ -126,6 +140,13 @@ public class ProjectRequestService {
         entity.setStatus(RequestStatus.REJECTED);
         entity.setRejectionReason(reason);
         entity.setUpdatedAt(LocalDateTime.now());
-        return toResponse(requestRepository.save(entity));
+        ProjectRequestEntity updatedRequest =
+                requestRepository.save(entity);
+
+        emailService.sendProjectRejectedEmail(
+                updatedRequest
+        );
+
+        return toResponse(updatedRequest);
     }
 }
