@@ -88,18 +88,32 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
+
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "http://localhost:3000",
-                "http://127.0.0.1:5173"
+                "http://127.0.0.1:5173",
+                "https://devex-frontend.vercel.app"
         ));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+
+        config.setAllowedMethods(List.of(
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH",
+                "DELETE",
+                "OPTIONS"
+        ));
+
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
         config.setExposedHeaders(List.of("Authorization"));
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 }
