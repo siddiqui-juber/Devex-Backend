@@ -24,7 +24,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-
         return new BCryptPasswordEncoder();
     }
 
@@ -32,7 +31,6 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config
     ) throws Exception {
-
         return config.getAuthenticationManager();
     }
 
@@ -56,25 +54,21 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
-                        )
-                        .permitAll()
+                        ).permitAll()
 
                         .requestMatchers(
                                 "/api/v1/admin/**"
-                        )
-                        .hasRole("ADMIN")
+                        ).hasRole("ADMIN")
+
                         .requestMatchers(
                                 "/api/v1/client/**"
-                        )
-                        .hasRole("CLIENT")
+                        ).hasRole("CLIENT")
+
                         .requestMatchers(
                                 "/api/v1/projects/**"
-                        )
-                        .hasAnyRole("ADMIN", "CLIENT")
+                        ).hasAnyRole("ADMIN", "CLIENT")
 
-                        .anyRequest()
-                        .authenticated()
-
+                        .anyRequest().authenticated()
                 )
 
                 .addFilterBefore(
@@ -87,14 +81,12 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of(
-                "http://localhost:5174",
-                "http://localhost:3000",
-                "http://127.0.0.1:5173",
-                "https://devex-frontend.vercel.app",
-                "https://devexfrontend-fbu3pndpo-devex-s-projects.vercel.app"
+        config.setAllowedOriginPatterns(List.of(
+                "https://*.vercel.app",
+                "http://localhost:*"
         ));
 
         config.setAllowedMethods(List.of(
@@ -107,8 +99,8 @@ public class SecurityConfig {
         ));
 
         config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
         config.setExposedHeaders(List.of("Authorization"));
+        config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
