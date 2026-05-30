@@ -90,10 +90,11 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(List.of(
-                "http://localhost:5173",
+                "http://localhost:5174",
                 "http://localhost:3000",
                 "http://127.0.0.1:5173",
-                "https://devex-frontend.vercel.app"
+                "https://devex-frontend.vercel.app",
+                "https://devexfrontend-fbu3pndpo-devex-s-projects.vercel.app"
         ));
 
         config.setAllowedMethods(List.of(
