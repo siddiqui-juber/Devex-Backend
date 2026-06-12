@@ -22,7 +22,7 @@ public class EmailService {
         SimpleMailMessage mail =
                 new SimpleMailMessage();
 
-        mail.setTo("thedevexhq@gmail.com");
+        mail.setTo("genxcrafthq@gmail.com");
 
         mail.setSubject(
                 "New Support Ticket - "
@@ -54,7 +54,7 @@ public class EmailService {
         SimpleMailMessage mail =
                 new SimpleMailMessage();
 
-        mail.setTo("thedevexhq@gmail.com");
+        mail.setTo("genxcrafthq@gmail.com");
 
         mail.setSubject(
                 "🚀 New Project Request"
