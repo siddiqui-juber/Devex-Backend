@@ -84,8 +84,10 @@ public class SecurityConfig {
 
         CorsConfiguration config = new CorsConfiguration();
 
+
         config.setAllowedOriginPatterns(List.of(
                 "https://*.vercel.app",
+                "https://*.onrender.com",
                 "http://localhost:*"
         ));
 
