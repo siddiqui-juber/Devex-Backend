@@ -15,7 +15,7 @@ import java.util.Map;
 public class JwtService {
 
     private static final String SECRET =
-            "devexsecretkeydevexsecretkeydevexsecretkey";
+            "devexsecretkeydevexsecretkeydevexsecretkeydevexsecretkeydevexsecretkeydevexsecretkey";
 
     private final Key key =
             Keys.hmacShaKeyFor(SECRET.getBytes());
