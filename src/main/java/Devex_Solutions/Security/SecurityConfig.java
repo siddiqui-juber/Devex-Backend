@@ -87,8 +87,9 @@ public class SecurityConfig {
 
         config.setAllowedOriginPatterns(List.of(
                 "https://*.vercel.app",
-                "https://*.onrender.com",
-                "http://localhost:*"
+                "http://localhost:*",
+                "https://genxcraft.in",
+                "https://www.genxcraft.in"
         ));
 
         config.setAllowedMethods(List.of(
