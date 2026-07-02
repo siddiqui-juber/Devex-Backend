@@ -1,0 +1,9 @@
+; DNS for AI Discovery (DNS-AID) Records for GenXcraft Agent Discovery
+; Publish these records under your domain namespace using SVCB/HTTPS records.
+
+_index._agents.genxcraft.in. 3600 IN SVCB 1 agent.genxcraft.in. alpn="a2a" port=443 mandatory=alpn,port
+_a2a._agents.genxcraft.in.   3600 IN SVCB 1 agent.genxcraft.in. alpn="a2a" port=443 mandatory=alpn,port
+
+; Note:
+; 1. Replace "genxcraft.in" with your actual domain if deployed on another domain.
+; 2. Ensure that DNSSEC is enabled and the zone is signed so validating DoH resolvers return authenticated data.
